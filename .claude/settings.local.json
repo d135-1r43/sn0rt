@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(./mvnw test)"
+      "Bash(./mvnw test)",
+      "WebSearch",
+      "Bash(./mvnw formatter:format:*)"
     ],
     "deny": [],
     "ask": []
