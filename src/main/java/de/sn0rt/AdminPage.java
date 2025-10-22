@@ -32,6 +32,9 @@ public class AdminPage
 	@Inject
 	QRCodeService qrCodeService;
 
+	@Inject
+	PdfService pdfService;
+
 	@ConfigProperty(name = "sn0rt.base-url")
 	String baseUrl;
 
@@ -98,7 +101,7 @@ public class AdminPage
 				try
 				{
 					String fullUrl = baseUrl + "/" + shortUrl.shortCode;
-					byte[] pdf = generateQrCodePdf(shortUrl, fullUrl);
+					byte[] pdf = pdfService.generateQrCodePdf(shortUrl, fullUrl);
 					return Response.ok(pdf)
 						.header("Content-Disposition", "attachment; filename=qr-" + shortCode + ".pdf")
 						.build();
@@ -113,66 +116,6 @@ public class AdminPage
 			.orElse(Response.status(Response.Status.NOT_FOUND)
 				.entity("Short URL not found")
 				.build());
-	}
-
-	private byte[] generateQrCodePdf(ShortUrl shortUrl, String fullUrl) throws Exception
-	{
-		org.apache.pdfbox.pdmodel.PDDocument document = new org.apache.pdfbox.pdmodel.PDDocument();
-		try
-		{
-			org.apache.pdfbox.pdmodel.PDPage page = new org.apache.pdfbox.pdmodel.PDPage();
-			document.addPage(page);
-
-			// Generate QR code image
-			java.awt.image.BufferedImage qrImage = qrCodeService.toImage(qrCodeService.generateQrCode(fullUrl), 8, 4);
-
-			// Convert BufferedImage to PDImageXObject
-			org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject pdImage = org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory.createFromImage(document, qrImage);
-
-			// Add content to PDF
-			org.apache.pdfbox.pdmodel.PDPageContentStream contentStream = new org.apache.pdfbox.pdmodel.PDPageContentStream(document, page);
-
-			// Add title
-			contentStream.beginText();
-			contentStream.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA_BOLD), 18);
-			contentStream.newLineAtOffset(50, 750);
-			contentStream.showText("QR Code for Short URL");
-			contentStream.endText();
-
-			// Add short code
-			contentStream.beginText();
-			contentStream.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA), 14);
-			contentStream.newLineAtOffset(50, 720);
-			contentStream.showText("Short Code: " + shortUrl.shortCode);
-			contentStream.endText();
-
-			// Add full URL
-			contentStream.beginText();
-			contentStream.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA), 12);
-			contentStream.newLineAtOffset(50, 695);
-			contentStream.showText("URL: " + fullUrl);
-			contentStream.endText();
-
-			// Add original URL
-			contentStream.beginText();
-			contentStream.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA), 10);
-			contentStream.newLineAtOffset(50, 675);
-			contentStream.showText("Redirects to: " + shortUrl.originalUrl);
-			contentStream.endText();
-
-			// Add QR code image
-			contentStream.drawImage(pdImage, 150, 350, 300, 300);
-
-			contentStream.close();
-
-			java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
-			document.save(baos);
-			return baos.toByteArray();
-		}
-		finally
-		{
-			document.close();
-		}
 	}
 
 	private String generateShortCode()
