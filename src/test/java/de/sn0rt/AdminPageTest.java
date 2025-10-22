@@ -44,7 +44,7 @@ class AdminPageTest
 			.then()
 			.statusCode(200)
 			.contentType(ContentType.HTML)
-			.body(containsString("URL Shortener Admin"))
+			.body(containsString("sn0rt"))
 			.body(containsString("Create Short URL"))
 			.body(containsString("All Short URLs (0)"));
 	}

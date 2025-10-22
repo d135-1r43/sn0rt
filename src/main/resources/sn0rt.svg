@@ -1,0 +1,38 @@
+<svg
+  width="112"
+  height="112"
+  viewBox="0 0 24 24"
+  xmlns="http://www.w3.org/2000/svg"
+  role="img"
+  aria-label="Chibi pig icon"
+  style="color:#ff7fb7"
+>
+  <defs>
+    <!-- Cut out eyes/snout/mouth so we keep a single color -->
+    <mask id="chibi-pig-cutouts" maskUnits="userSpaceOnUse">
+      <!-- start fully visible -->
+      <rect x="0" y="0" width="24" height="24" fill="#fff"/>
+
+      <!-- BIG chibi eyes -->
+      <circle cx="8.4" cy="11" r="1.7" fill="#000"/>
+      <circle cx="15.6" cy="11" r="1.7" fill="#000"/>
+
+      <!-- tiny smiling mouth -->
+      <path d="M10.2 17.2c.6.6 3 .6 3.6 0" fill="none" stroke="#000" stroke-width="1" stroke-linecap="round"/>
+
+      <!-- snout opening + nostrils -->
+      <ellipse cx="12" cy="14.2" rx="3.1" ry="2.2" fill="#000"/>
+      <ellipse cx="11.1" cy="14.2" rx=".45" ry=".8" fill="#000"/>
+      <ellipse cx="12.9" cy="14.2" rx=".45" ry=".8" fill="#000"/>
+    </mask>
+  </defs>
+
+  <!-- Head + ears group (all one color), with cutouts applied -->
+  <g mask="url(#chibi-pig-cutouts)" fill="currentColor">
+    <!-- round chibi head -->
+    <circle cx="12" cy="12.5" r="8.2"/>
+    <!-- soft, rounded ears -->
+    <path d="M5.4 6.9c-.5-1.6.9-3 2.5-2.6c1.2.3 2.5 1.3 3.3 2.4c.2.3.1.7-.3.8c-1.7.6-3.5 1.2-4.8 1.5c-.4.1-.8-.1-.9-.5c-.1-.5.1-1 .2-1.6z"/>
+    <path d="M18.6 6.9c.5-1.6-1-3-2.6-2.6c-1.2.3-2.5 1.3-3.3 2.4c-.2.3-.1.7.3.8c1.7.6 3.5 1.2 4.8 1.5c.4.1.8-.1.9-.5c.1-.5-.1-1-.1-1.6z"/>
+  </g>
+</svg>

@@ -2,8 +2,10 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>URL Shortener - Admin</title>
+    <title>sn0rt - Admin Portal</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;500;600;700&display=swap');
+
         * {
             margin: 0;
             padding: 0;
@@ -11,55 +13,137 @@
         }
 
         body {
-            background-color: #0a0a0a;
-            color: #e0e0e0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(180deg, #1a0520 0%, #2d0a3d 50%, #1a0520 100%);
+            background-attachment: fixed;
+            color: #ff7fb7;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             padding: 20px;
-            line-height: 1.6;
+            line-height: 1.7;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 127, 183, 0.03) 2px,
+                    rgba(255, 127, 183, 0.03) 4px
+                );
+            pointer-events: none;
+            z-index: 1;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(45, 10, 61, 0.5);
+            border: 2px solid #ff7fb7;
+            border-radius: 15px;
+            box-shadow:
+                0 0 20px rgba(255, 127, 183, 0.5),
+                inset 0 0 20px rgba(255, 127, 183, 0.1);
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            filter: drop-shadow(0 0 10px #ff7fb7);
         }
 
         h1 {
-            color: #4695EB;
-            font-size: 2.5rem;
-            margin-bottom: 30px;
+            color: #ff7fb7;
+            font-size: 3rem;
+            font-weight: 900;
+            margin: 0;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            text-shadow:
+                0 0 10px #ff7fb7,
+                0 0 20px #ff7fb7,
+                0 0 30px #ff1493,
+                0 0 40px #ff1493;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow:
+                    0 0 10px #ff7fb7,
+                    0 0 20px #ff7fb7,
+                    0 0 30px #ff1493,
+                    0 0 40px #ff1493;
+            }
+            to {
+                text-shadow:
+                    0 0 20px #ff7fb7,
+                    0 0 30px #ff7fb7,
+                    0 0 40px #ff1493,
+                    0 0 50px #ff1493,
+                    0 0 60px #ff1493;
+            }
         }
 
         .alert {
             padding: 15px 20px;
             margin-bottom: 20px;
-            border-radius: 5px;
+            border-radius: 10px;
             font-weight: 500;
+            border: 2px solid;
+            box-shadow: 0 0 15px rgba(255, 127, 183, 0.3);
         }
 
         .alert-error {
-            background-color: #2d1515;
-            border: 1px solid #cc3333;
-            color: #ff6b6b;
+            background: rgba(255, 20, 147, 0.2);
+            border-color: #ff1493;
+            color: #ff69b4;
+            box-shadow: 0 0 15px rgba(255, 20, 147, 0.5);
         }
 
         .alert-success {
-            background-color: #152d15;
-            border: 1px solid #33cc33;
-            color: #6bff6b;
+            background: rgba(255, 127, 183, 0.2);
+            border-color: #ff7fb7;
+            color: #ffb3d9;
+            box-shadow: 0 0 15px rgba(255, 127, 183, 0.5);
         }
 
         .form-section {
-            background-color: #1a1a1a;
+            background: rgba(45, 10, 61, 0.4);
             padding: 30px;
-            border-radius: 8px;
+            border-radius: 15px;
             margin-bottom: 40px;
-            border: 1px solid #333;
+            border: 2px solid #ff7fb7;
+            box-shadow:
+                0 0 20px rgba(255, 127, 183, 0.3),
+                inset 0 0 20px rgba(255, 127, 183, 0.05);
+            backdrop-filter: blur(10px);
         }
 
         h2 {
-            color: #be9100;
+            color: #ff7fb7;
             font-size: 1.5rem;
             margin-bottom: 20px;
+            font-weight: 600;
+            letter-spacing: 0.02em;
         }
 
         .form-group {
@@ -69,48 +153,68 @@
         label {
             display: block;
             margin-bottom: 8px;
-            color: #b0b0b0;
+            color: #ffb3d9;
             font-weight: 500;
+            font-size: 0.95rem;
         }
 
         input[type="text"],
         input[type="url"] {
             width: 100%;
             padding: 12px 15px;
-            background-color: #0a0a0a;
-            border: 1px solid #444;
-            border-radius: 5px;
-            color: #e0e0e0;
+            background: rgba(26, 5, 32, 0.6);
+            border: 2px solid #ff7fb7;
+            border-radius: 8px;
+            color: #ffb3d9;
             font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
         }
 
         input[type="text"]:focus,
         input[type="url"]:focus {
             outline: none;
-            border-color: #4695EB;
+            border-color: #ff1493;
+            box-shadow: 0 0 15px rgba(255, 127, 183, 0.5);
+            background: rgba(26, 5, 32, 0.8);
+        }
+
+        input[type="text"]::placeholder,
+        input[type="url"]::placeholder {
+            color: rgba(255, 127, 183, 0.4);
         }
 
         button {
-            background-color: #4695EB;
+            background: linear-gradient(135deg, #ff1493 0%, #ff7fb7 100%);
             color: #fff;
             padding: 12px 30px;
-            border: none;
-            border-radius: 5px;
+            border: 2px solid #ff7fb7;
+            border-radius: 8px;
             font-size: 1rem;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            transition: background-color 0.2s;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(255, 127, 183, 0.5);
         }
 
         button:hover {
-            background-color: #3a7ac8;
+            background: linear-gradient(135deg, #ff7fb7 0%, #ff1493 100%);
+            box-shadow: 0 0 25px rgba(255, 127, 183, 0.8);
+            transform: translateY(-2px);
         }
 
         .urls-section {
-            background-color: #1a1a1a;
+            background: rgba(45, 10, 61, 0.4);
             padding: 30px;
-            border-radius: 8px;
-            border: 1px solid #333;
+            border-radius: 15px;
+            border: 2px solid #ff7fb7;
+            box-shadow:
+                0 0 20px rgba(255, 127, 183, 0.3),
+                inset 0 0 20px rgba(255, 127, 183, 0.05);
+            backdrop-filter: blur(10px);
         }
 
         .url-list {
@@ -118,15 +222,19 @@
         }
 
         .url-item {
-            background-color: #0a0a0a;
+            background: rgba(26, 5, 32, 0.6);
             padding: 20px;
             margin-bottom: 15px;
-            border-radius: 5px;
-            border: 1px solid #333;
+            border-radius: 10px;
+            border: 2px solid #ff7fb7;
+            box-shadow: 0 0 10px rgba(255, 127, 183, 0.2);
+            transition: all 0.3s ease;
         }
 
         .url-item:hover {
-            border-color: #4695EB;
+            border-color: #ff1493;
+            box-shadow: 0 0 20px rgba(255, 127, 183, 0.5);
+            transform: translateY(-2px);
         }
 
         .url-header {
@@ -137,42 +245,50 @@
         }
 
         .short-code {
-            color: #4695EB;
+            color: #ff7fb7;
             font-size: 1.2rem;
-            font-weight: 600;
+            font-weight: 700;
+            text-shadow: 0 0 5px #ff7fb7;
         }
 
         .stats {
-            color: #be9100;
+            color: #ffb3d9;
             font-size: 0.9rem;
+            background: rgba(255, 127, 183, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            border: 1px solid #ff7fb7;
         }
 
         .original-url {
-            color: #b0b0b0;
+            color: #ffb3d9;
             word-break: break-all;
             margin-bottom: 8px;
+            opacity: 0.8;
         }
 
         .url-meta {
             display: flex;
             gap: 20px;
-            color: #888;
+            color: rgba(255, 127, 183, 0.6);
             font-size: 0.85rem;
         }
 
         .empty-state {
             text-align: center;
             padding: 40px;
-            color: #888;
+            color: rgba(255, 127, 183, 0.6);
         }
 
         .short-link {
-            color: #4695EB;
+            color: #ff7fb7;
             text-decoration: none;
+            transition: all 0.3s ease;
         }
 
         .short-link:hover {
-            text-decoration: underline;
+            color: #ff1493;
+            text-shadow: 0 0 10px #ff7fb7;
         }
 
         .qr-code-container {
@@ -181,13 +297,15 @@
             gap: 20px;
             margin-top: 15px;
             padding-top: 15px;
-            border-top: 1px solid #333;
+            border-top: 2px solid rgba(255, 127, 183, 0.3);
         }
 
         .qr-code-image {
             background-color: white;
             padding: 10px;
-            border-radius: 5px;
+            border-radius: 10px;
+            border: 2px solid #ff7fb7;
+            box-shadow: 0 0 15px rgba(255, 127, 183, 0.5);
         }
 
         .qr-code-actions {
@@ -197,26 +315,53 @@
         }
 
         .btn-small {
-            background-color: #333;
+            background: linear-gradient(135deg, #ff1493 0%, #ff7fb7 100%);
             color: #fff;
             padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
+            border: 2px solid #ff7fb7;
+            border-radius: 8px;
             font-size: 0.85rem;
+            font-weight: 600;
             cursor: pointer;
             text-decoration: none;
             text-align: center;
-            transition: background-color 0.2s;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(255, 127, 183, 0.3);
         }
 
         .btn-small:hover {
-            background-color: #444;
+            background: linear-gradient(135deg, #ff7fb7 0%, #ff1493 100%);
+            box-shadow: 0 0 20px rgba(255, 127, 183, 0.6);
+            transform: translateY(-1px);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>URL Shortener Admin</h1>
+        <div class="header">
+            <svg class="logo" width="112" height="112" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="sn0rt logo">
+                <defs>
+                    <mask id="chibi-pig-cutouts" maskUnits="userSpaceOnUse">
+                        <rect x="0" y="0" width="24" height="24" fill="#fff"/>
+                        <circle cx="8.4" cy="11" r="1.7" fill="#000"/>
+                        <circle cx="15.6" cy="11" r="1.7" fill="#000"/>
+                        <path d="M10.2 17.2c.6.6 3 .6 3.6 0" fill="none" stroke="#000" stroke-width="1" stroke-linecap="round"/>
+                        <ellipse cx="12" cy="14.2" rx="3.1" ry="2.2" fill="#000"/>
+                        <ellipse cx="11.1" cy="14.2" rx=".45" ry=".8" fill="#000"/>
+                        <ellipse cx="12.9" cy="14.2" rx=".45" ry=".8" fill="#000"/>
+                    </mask>
+                </defs>
+                <g mask="url(#chibi-pig-cutouts)" fill="#ff7fb7">
+                    <circle cx="12" cy="12.5" r="8.2"/>
+                    <path d="M5.4 6.9c-.5-1.6.9-3 2.5-2.6c1.2.3 2.5 1.3 3.3 2.4c.2.3.1.7-.3.8c-1.7.6-3.5 1.2-4.8 1.5c-.4.1-.8-.1-.9-.5c-.1-.5.1-1 .2-1.6z"/>
+                    <path d="M18.6 6.9c.5-1.6-1-3-2.6-2.6c-1.2.3-2.5 1.3-3.3 2.4c-.2.3-.1.7.3.8c1.7.6 3.5 1.2 4.8 1.5c.4.1.8-.1.9-.5c.1-.5-.1-1-.1-1.6z"/>
+                </g>
+            </svg>
+            <h1>sn0rt</h1>
+        </div>
 
         {#if error}
         <div class="alert alert-error">
