@@ -39,6 +39,7 @@ class AdminPageTest
 
 		// when & then
 		given()
+			.auth().basic("admin", "admin")
 			.when()
 			.get("/admin")
 			.then()
@@ -58,6 +59,7 @@ class AdminPageTest
 
 		// when & then
 		given()
+			.auth().basic("admin", "admin")
 			.when()
 			.get("/admin")
 			.then()
@@ -82,6 +84,7 @@ class AdminPageTest
 
 		// when & then
 		given()
+			.auth().basic("admin", "admin")
 			.when()
 			.get("/admin")
 			.then()
@@ -99,6 +102,7 @@ class AdminPageTest
 
 		// when & then
 		given()
+			.auth().basic("admin", "admin")
 			.redirects().follow(false)
 			.contentType(ContentType.URLENC)
 			.formParam("url", testUrl)
@@ -118,6 +122,7 @@ class AdminPageTest
 
 		// when & then
 		given()
+			.auth().basic("admin", "admin")
 			.redirects().follow(false)
 			.contentType(ContentType.URLENC)
 			.formParam("url", testUrl)
@@ -138,6 +143,7 @@ class AdminPageTest
 
 		// when & then
 		given()
+			.auth().basic("admin", "admin")
 			.redirects().follow(false)
 			.contentType(ContentType.URLENC)
 			.when()
@@ -156,6 +162,7 @@ class AdminPageTest
 
 		// when & then
 		given()
+			.auth().basic("admin", "admin")
 			.redirects().follow(false)
 			.contentType(ContentType.URLENC)
 			.formParam("url", blankUrl)
@@ -175,6 +182,7 @@ class AdminPageTest
 
 		// when & then
 		given()
+			.auth().basic("admin", "admin")
 			.redirects().follow(false)
 			.contentType(ContentType.URLENC)
 			.formParam("url", "https://example.com/second")
@@ -195,6 +203,7 @@ class AdminPageTest
 
 		// when & then
 		given()
+			.auth().basic("admin", "admin")
 			.queryParam("success", successMessage)
 			.when()
 			.get("/admin")
@@ -213,6 +222,7 @@ class AdminPageTest
 
 		// when & then
 		given()
+			.auth().basic("admin", "admin")
 			.queryParam("error", errorMessage)
 			.when()
 			.get("/admin")
@@ -231,6 +241,7 @@ class AdminPageTest
 
 		// when & then
 		given()
+			.auth().basic("admin", "admin")
 			.when()
 			.get("/admin")
 			.then()
@@ -248,6 +259,7 @@ class AdminPageTest
 
 		// when & then
 		given()
+			.auth().basic("admin", "admin")
 			.when()
 			.get("/admin")
 			.then()
@@ -266,6 +278,7 @@ class AdminPageTest
 
 		// when
 		given()
+			.auth().basic("admin", "admin")
 			.redirects().follow(false)
 			.contentType(ContentType.URLENC)
 			.formParam("url", testUrl)
@@ -291,6 +304,7 @@ class AdminPageTest
 
 		// when & then
 		String location = given()
+			.auth().basic("admin", "admin")
 			.redirects().follow(false)
 			.contentType(ContentType.URLENC)
 			.formParam("url", testUrl)
@@ -318,6 +332,7 @@ class AdminPageTest
 
 		// when & then
 		byte[] pdf = given()
+			.auth().basic("admin", "admin")
 			.when()
 			.get("/admin/qr/" + shortCode + "/pdf")
 			.then()
@@ -342,6 +357,7 @@ class AdminPageTest
 
 		// when & then
 		given()
+			.auth().basic("admin", "admin")
 			.when()
 			.get("/admin/qr/" + nonExistentCode + "/pdf")
 			.then()
@@ -356,6 +372,7 @@ class AdminPageTest
 
 		// when & then
 		String html = given()
+			.auth().basic("admin", "admin")
 			.when()
 			.get("/admin")
 			.then()
@@ -367,6 +384,35 @@ class AdminPageTest
 		assert html.contains("data:image/png;base64,");
 		assert html.contains("qr-code-image");
 		assert html.contains("/admin/qr/qrtest/pdf");
+	}
+
+	@Test
+	void testAdminPageRequiresAuthentication()
+	{
+		// given
+		// no authentication
+
+		// when & then
+		given()
+			.when()
+			.get("/admin")
+			.then()
+			.statusCode(401);
+	}
+
+	@Test
+	void testAdminPageRejectsWrongPassword()
+	{
+		// given
+		// wrong password
+
+		// when & then
+		given()
+			.auth().basic("admin", "wrongpassword")
+			.when()
+			.get("/admin")
+			.then()
+			.statusCode(401);
 	}
 
 	// Helper methods

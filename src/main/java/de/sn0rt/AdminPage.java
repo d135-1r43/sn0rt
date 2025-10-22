@@ -4,6 +4,7 @@ import io.quarkus.qute.CheckedTemplate;
 import io.quarkus.qute.TemplateInstance;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
@@ -18,6 +19,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Path("/admin")
+@RolesAllowed("admin")
 public class AdminPage
 {
 	@CheckedTemplate
