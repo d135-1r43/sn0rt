@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>URL Shortener - Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0a0a0a;
+            color: #e0e0e0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #4695EB;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-weight: 500;
+        }
+
+        .alert-error {
+            background-color: #2d1515;
+            border: 1px solid #cc3333;
+            color: #ff6b6b;
+        }
+
+        .alert-success {
+            background-color: #152d15;
+            border: 1px solid #33cc33;
+            color: #6bff6b;
+        }
+
+        .form-section {
+            background-color: #1a1a1a;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+            border: 1px solid #333;
+        }
+
+        h2 {
+            color: #be9100;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #b0b0b0;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="url"] {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: #0a0a0a;
+            border: 1px solid #444;
+            border-radius: 5px;
+            color: #e0e0e0;
+            font-size: 1rem;
+        }
+
+        input[type="text"]:focus,
+        input[type="url"]:focus {
+            outline: none;
+            border-color: #4695EB;
+        }
+
+        button {
+            background-color: #4695EB;
+            color: #fff;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #3a7ac8;
+        }
+
+        .urls-section {
+            background-color: #1a1a1a;
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+
+        .url-list {
+            list-style: none;
+        }
+
+        .url-item {
+            background-color: #0a0a0a;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #333;
+        }
+
+        .url-item:hover {
+            border-color: #4695EB;
+        }
+
+        .url-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .short-code {
+            color: #4695EB;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .stats {
+            color: #be9100;
+            font-size: 0.9rem;
+        }
+
+        .original-url {
+            color: #b0b0b0;
+            word-break: break-all;
+            margin-bottom: 8px;
+        }
+
+        .url-meta {
+            display: flex;
+            gap: 20px;
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+
+        .short-link {
+            color: #4695EB;
+            text-decoration: none;
+        }
+
+        .short-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>URL Shortener Admin</h1>
+
+        {#if error}
+        <div class="alert alert-error">
+            {error}
+        </div>
+        {/if}
+
+        {#if success}
+        <div class="alert alert-success">
+            {success}
+        </div>
+        {/if}
+
+        <div class="form-section">
+            <h2>Create Short URL</h2>
+            <form method="POST" action="/admin">
+                <div class="form-group">
+                    <label for="url">Original URL *</label>
+                    <input type="url" id="url" name="url" placeholder="https://example.com/very/long/url" required>
+                </div>
+                <div class="form-group">
+                    <label for="customCode">Custom Short Code (optional)</label>
+                    <input type="text" id="customCode" name="customCode" placeholder="my-custom-code">
+                </div>
+                <button type="submit">Create Short URL</button>
+            </form>
+        </div>
+
+        <div class="urls-section">
+            <h2>All Short URLs ({urls.size()})</h2>
+            {#if urls.isEmpty()}
+            <div class="empty-state">
+                <p>No short URLs created yet. Create your first one above!</p>
+            </div>
+            {#else}
+            <ul class="url-list">
+                {#for url in urls}
+                <li class="url-item">
+                    <div class="url-header">
+                        <a href="/{url.shortCode}" class="short-code short-link" target="_blank">/{url.shortCode}</a>
+                        <span class="stats">{url.clickCount} clicks</span>
+                    </div>
+                    <div class="original-url">
+                        → {url.originalUrl}
+                    </div>
+                    <div class="url-meta">
+                        <span>Created: {url.createdAt}</span>
+                        <span>ID: {url.id}</span>
+                    </div>
+                </li>
+                {/for}
+            </ul>
+            {/if}
+        </div>
+    </div>
+</body>
+</html>
