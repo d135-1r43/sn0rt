@@ -14,7 +14,6 @@ import static java.util.Objects.requireNonNull;
 @Path("/some-page")
 public class SomePage
 {
-
 	private final Template page;
 
 	public SomePage(Template page)
@@ -28,5 +27,4 @@ public class SomePage
 	{
 		return page.data("name", name);
 	}
-
 }
