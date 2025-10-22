@@ -224,4 +224,75 @@ class ShortUrlResourceTest
 		// then
 		assert !shortCode1.equals(shortCode2);
 	}
+
+	@Test
+	void testShortenUrlWithCustomCode()
+	{
+		// given
+		String testUrl = "https://example.com/custom";
+		String customCode = "mycustom";
+
+		// when & then
+		given()
+			.contentType(ContentType.JSON)
+			.body("{\"url\":\"" + testUrl + "\",\"customCode\":\"" + customCode + "\"}")
+			.when()
+			.post("/shorten")
+			.then()
+			.statusCode(200)
+			.body("shortCode", equalTo(customCode))
+			.body("originalUrl", equalTo(testUrl));
+	}
+
+	@Test
+	void testShortenUrlWithDuplicateCustomCode()
+	{
+		// given
+		String testUrl1 = "https://example.com/first";
+		String testUrl2 = "https://example.com/second";
+		String customCode = "duplicate";
+
+		given()
+			.contentType(ContentType.JSON)
+			.body("{\"url\":\"" + testUrl1 + "\",\"customCode\":\"" + customCode + "\"}")
+			.when()
+			.post("/shorten")
+			.then()
+			.statusCode(200);
+
+		// when & then
+		given()
+			.contentType(ContentType.JSON)
+			.body("{\"url\":\"" + testUrl2 + "\",\"customCode\":\"" + customCode + "\"}")
+			.when()
+			.post("/shorten")
+			.then()
+			.statusCode(409)
+			.body("error", equalTo("Custom code already exists"));
+	}
+
+	@Test
+	void testCustomCodeRedirect()
+	{
+		// given
+		String testUrl = "https://example.com/customdest";
+		String customCode = "mylink";
+
+		given()
+			.contentType(ContentType.JSON)
+			.body("{\"url\":\"" + testUrl + "\",\"customCode\":\"" + customCode + "\"}")
+			.when()
+			.post("/shorten")
+			.then()
+			.statusCode(200);
+
+		// when & then
+		given()
+			.redirects().follow(false)
+			.when()
+			.get("/" + customCode)
+			.then()
+			.statusCode(303)
+			.header("Location", equalTo(testUrl));
+	}
 }

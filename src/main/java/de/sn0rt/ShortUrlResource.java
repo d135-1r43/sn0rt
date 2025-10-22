@@ -29,10 +29,24 @@ public class ShortUrlResource
 				.build();
 		}
 
-		String shortCode = generateShortCode();
-		while (repository.existsByShortCode(shortCode))
+		String shortCode;
+		if (request.customCode != null && !request.customCode.isBlank())
+		{
+			shortCode = request.customCode;
+			if (repository.existsByShortCode(shortCode))
+			{
+				return Response.status(Response.Status.CONFLICT)
+					.entity(new ErrorResponse("Custom code already exists"))
+					.build();
+			}
+		}
+		else
 		{
 			shortCode = generateShortCode();
+			while (repository.existsByShortCode(shortCode))
+			{
+				shortCode = generateShortCode();
+			}
 		}
 
 		ShortUrl shortUrl = new ShortUrl(shortCode, request.url);
@@ -80,6 +94,7 @@ public class ShortUrlResource
 	public static class ShortenRequest
 	{
 		public String url;
+		public String customCode;
 	}
 
 	public static class ShortenResponse
