@@ -1,0 +1,3 @@
+- tests should follow // given, // when and // then
+- Mock as little as needed in tests
+- always run the tests
