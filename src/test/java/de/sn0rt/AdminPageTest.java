@@ -68,7 +68,10 @@ class AdminPageTest
 			.body(containsString("/code2"))
 			.body(containsString("https://example.com/test1"))
 			.body(containsString("https://example.com/test2"))
-			.body(containsString("0 clicks"));
+			.body(containsString("0 clicks"))
+			.body(containsString("data:image/png;base64,")) // QR code present
+			.body(containsString("/admin/qr/code1/pdf")) // PDF download link
+			.body(containsString("/admin/qr/code2/pdf"));
 	}
 
 	@Test
@@ -303,6 +306,67 @@ class AdminPageTest
 		// %20)
 		assert location.contains("success=");
 		assert !location.contains(" "); // no raw spaces in URL
+	}
+
+	@Test
+	void testDownloadQrCodePdf()
+	{
+		// given
+		String testUrl = "https://example.com/pdftest";
+		String shortCode = "pdfcode";
+		createShortUrl(testUrl, shortCode);
+
+		// when & then
+		byte[] pdf = given()
+			.when()
+			.get("/admin/qr/" + shortCode + "/pdf")
+			.then()
+			.statusCode(200)
+			.contentType("application/pdf")
+			.header("Content-Disposition", containsString("attachment"))
+			.header("Content-Disposition", containsString("qr-" + shortCode + ".pdf"))
+			.extract()
+			.asByteArray();
+
+		// then
+		assert pdf.length > 0;
+		// Verify it's a PDF by checking magic number
+		assert pdf[0] == 0x25 && pdf[1] == 0x50 && pdf[2] == 0x44 && pdf[3] == 0x46; // %PDF
+	}
+
+	@Test
+	void testDownloadQrCodePdfNotFound()
+	{
+		// given
+		String nonExistentCode = "notfound";
+
+		// when & then
+		given()
+			.when()
+			.get("/admin/qr/" + nonExistentCode + "/pdf")
+			.then()
+			.statusCode(404);
+	}
+
+	@Test
+	void testQrCodeDisplayedInAdminPage()
+	{
+		// given
+		createShortUrl("https://example.com/qrtest", "qrtest");
+
+		// when & then
+		String html = given()
+			.when()
+			.get("/admin")
+			.then()
+			.statusCode(200)
+			.extract()
+			.asString();
+
+		// then - verify QR code is present as base64 image
+		assert html.contains("data:image/png;base64,");
+		assert html.contains("qr-code-image");
+		assert html.contains("/admin/qr/qrtest/pdf");
 	}
 
 	// Helper methods

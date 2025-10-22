@@ -42,11 +42,10 @@ public class ShortUrlResource
 		}
 		else
 		{
-			shortCode = generateShortCode();
-			while (repository.existsByShortCode(shortCode))
+			do
 			{
 				shortCode = generateShortCode();
-			}
+			} while (repository.existsByShortCode(shortCode));
 		}
 
 		ShortUrl shortUrl = new ShortUrl(shortCode, request.url);

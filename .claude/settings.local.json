@@ -3,7 +3,10 @@
     "allow": [
       "Bash(./mvnw test)",
       "WebSearch",
-      "Bash(./mvnw formatter:format:*)"
+      "Bash(./mvnw formatter:format:*)",
+      "WebFetch(domain:docs.quarkiverse.io)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:www.the-main-thread.com)"
     ],
     "deny": [],
     "ask": []
