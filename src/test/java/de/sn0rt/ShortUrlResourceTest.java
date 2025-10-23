@@ -113,7 +113,7 @@ class ShortUrlResourceTest
 			.get("/" + nonExistentCode)
 			.then()
 			.statusCode(404)
-			.body("error", equalTo("Short URL not found"));
+			.contentType(ContentType.HTML);
 	}
 
 	@Test

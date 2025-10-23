@@ -55,22 +55,6 @@ public class ShortUrlResource
 	}
 
 	@GET
-	@Path("/{shortCode}")
-	@Transactional
-	public Response redirect(@PathParam("shortCode") String shortCode)
-	{
-		return repository.findByShortCode(shortCode)
-			.map(shortUrl -> {
-				shortUrl.clickCount++;
-				repository.persist(shortUrl);
-				return Response.seeOther(URI.create(shortUrl.originalUrl)).build();
-			})
-			.orElse(Response.status(Response.Status.NOT_FOUND)
-				.entity(new ErrorResponse("Short URL not found"))
-				.build());
-	}
-
-	@GET
 	@Path("/stats/{shortCode}")
 	@Transactional
 	public Response getStats(@PathParam("shortCode") String shortCode)
