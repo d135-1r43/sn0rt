@@ -42,6 +42,7 @@ public class AdminPage
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
+	@Transactional
 	public TemplateInstance get(@QueryParam("error") String error, @QueryParam("success") String success)
 	{
 		List<ShortUrl> urls = repository.listAll();
@@ -96,6 +97,7 @@ public class AdminPage
 	@GET
 	@Path("/qr/{shortCode}/pdf")
 	@Produces("application/pdf")
+	@Transactional
 	public Response downloadQrCodePdf(@PathParam("shortCode") String shortCode)
 	{
 		return repository.findByShortCode(shortCode)

@@ -72,6 +72,7 @@ public class ShortUrlResource
 
 	@GET
 	@Path("/stats/{shortCode}")
+	@Transactional
 	public Response getStats(@PathParam("shortCode") String shortCode)
 	{
 		return repository.findByShortCode(shortCode)

@@ -7,7 +7,10 @@
       "WebFetch(domain:docs.quarkiverse.io)",
       "WebFetch(domain:github.com)",
       "WebFetch(domain:www.the-main-thread.com)",
-      "WebFetch(domain:quarkus.io)"
+      "WebFetch(domain:quarkus.io)",
+      "Bash(./mvnw formatter:validate:*)",
+      "Bash(timeout 120 ./mvnw formatter:validate:*)",
+      "Bash(./mvnw clean test:*)"
     ],
     "deny": [],
     "ask": []

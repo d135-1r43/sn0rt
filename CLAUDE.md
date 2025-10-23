@@ -141,7 +141,7 @@ Use official GitMoji commit message convention, e.g.
 ## Best Practices
 
 1. **Dependency Injection**: Use `@Inject` for dependency injection, avoid manual instantiation
-2. **Panache Pattern**: Use Panache's Repository pattern for database operations, do not use Active Record
+2. **Panache Pattern**: Use Panache's Repository pattern for database operations, do not use Active Record. Extend from PanacheEntity to have the correct Id, sequence etc.
 3. **Transaction Management**: Use `@Transactional` for methods that modify data
 4. **Error Handling**: Return appropriate HTTP status codes with meaningful error messages by throwing WebApplicationException or a subclass
 5. **Security**: Always secure admin endpoints with authentication
