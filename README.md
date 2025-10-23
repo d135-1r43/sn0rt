@@ -1,78 +1,200 @@
-# sn0rt
+# sn0rt 🐷
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+A URL shortening service built with Quarkus featuring QR code generation and a synthwave-styled admin interface.
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+## Features
 
-## Running the application in dev mode
+- 🔗 **URL Shortening** - Create short URLs with auto-generated or custom codes
+- 📱 **QR Code Generation** - Automatically generate QR codes for each short URL
+- 📄 **PDF Export** - Download QR codes as PDFs
+- 🔐 **Secure Admin Panel** - Basic authentication with configurable credentials
+- 🌈 **Synthwave UI** - Pig pink styled admin interface with glassmorphism effects
+- 🚀 **Built with Quarkus** - Fast, lightweight, and cloud-native
 
-You can run your application in dev mode that enables live coding using:
+## Quick Start
 
-```shell script
+### Prerequisites
+
+- JDK 21
+- PostgreSQL database (or use Docker Compose)
+- Maven
+
+### Running in Development Mode
+
+Start the application with live reload:
+
+```bash
 ./mvnw quarkus:dev
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+The application will be available at:
+- **Homepage**: http://localhost:8080
+- **Admin Panel**: http://localhost:8080/admin (default credentials: `admin`/`admin`)
+- **Dev UI**: http://localhost:8080/q/dev/
 
-## Packaging and running the application
+### Configuration
 
-The application can be packaged using:
+Configure admin credentials via environment variables:
 
-```shell script
+```bash
+export ADMIN_USERNAME=your-username
+export ADMIN_PASSWORD=your-password
+```
+
+Or in `application.properties`:
+
+```properties
+sn0rt.admin.username=your-username
+sn0rt.admin.password=your-password
+sn0rt.base-url=https://your-domain.com
+```
+
+## Docker Deployment
+
+### Build Docker Image
+
+```bash
+./mvnw package
+docker build -f src/main/docker/Dockerfile.jvm -t sn0rt:latest .
+```
+
+### Run with Docker
+
+```bash
+docker run -p 8080:8080 \
+  -e ADMIN_USERNAME=admin \
+  -e ADMIN_PASSWORD=secure-password \
+  -e QUARKUS_DATASOURCE_JDBC_URL=jdbc:postgresql://host.docker.internal:5432/sn0rt \
+  -e QUARKUS_DATASOURCE_USERNAME=postgres \
+  -e QUARKUS_DATASOURCE_PASSWORD=postgres \
+  sn0rt:latest
+```
+
+### GitHub Container Registry
+
+The project includes a GitHub Actions workflow that automatically builds and pushes Docker images to GitHub Container Registry on every push to `main`:
+
+```bash
+docker pull ghcr.io/<your-username>/sn0rt:latest
+```
+
+## Building and Testing
+
+### Run Tests
+
+```bash
+./mvnw test
+```
+
+### Build Package
+
+```bash
 ./mvnw package
 ```
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+### Build Uber-JAR
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
-
-If you want to build an _über-jar_, execute the following command:
-
-```shell script
+```bash
 ./mvnw package -Dquarkus.package.jar.type=uber-jar
+java -jar target/*-runner.jar
 ```
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+## Native Executable
 
-## Creating a native executable
+Build a native executable for faster startup and lower memory footprint:
 
-You can create a native executable using:
-
-```shell script
+```bash
 ./mvnw package -Dnative
 ```
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
+Or build in a container (no GraalVM installation required):
 
-```shell script
+```bash
 ./mvnw package -Dnative -Dquarkus.native.container-build=true
 ```
 
-You can then execute your native executable with: `./target/sn0rt-1.0.0-SNAPSHOT-runner`
+Run the native executable:
 
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
+```bash
+./target/sn0rt-1.0.0-SNAPSHOT-runner
+```
 
-## Related Guides
+Learn more: [Quarkus Native Builds](https://quarkus.io/guides/maven-tooling)
 
-- QR Code Generator ([guide](https://docs.quarkiverse.io/quarkus-barcode/dev/index.html)): QR Code Generator has flexible options and absolute correctness.
-- REST Qute ([guide](https://quarkus.io/guides/qute-reference#rest_integration)): Qute integration for Quarkus REST. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
-- Hibernate ORM with Panache ([guide](https://quarkus.io/guides/hibernate-orm-panache)): Simplify your persistence code for Hibernate ORM via the active record or the repository pattern
-- JDBC Driver - PostgreSQL ([guide](https://quarkus.io/guides/datasource)): Connect to the PostgreSQL database via JDBC
+## API Usage
 
-## Provided Code
+### Create a Short URL
 
-### Hibernate ORM
+**Via Admin Panel:**
+Navigate to http://localhost:8080/admin and use the web form.
 
-Create your first JPA entity
+**Via REST API:**
 
-[Related guide section...](https://quarkus.io/guides/hibernate-orm)
+```bash
+# Auto-generated short code
+curl -X POST http://localhost:8080/api/shorten \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://example.com/very/long/url"}'
 
-[Related Hibernate with Panache section...](https://quarkus.io/guides/hibernate-orm-panache)
+# Custom short code
+curl -X POST http://localhost:8080/api/shorten \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://example.com/very/long/url", "customCode": "my-link"}'
+```
 
+### Access a Short URL
 
-### REST Qute
+```bash
+curl -L http://localhost:8080/{shortCode}
+```
 
-Create your web page using Quarkus REST and Qute
+### Download QR Code PDF
 
-[Related guide section...](https://quarkus.io/guides/qute#type-safe-templates)
+```bash
+curl -u admin:admin http://localhost:8080/admin/qr/{shortCode}/pdf -o qr-code.pdf
+```
+
+## Tech Stack
+
+- **Framework**: [Quarkus 3.28.4](https://quarkus.io/)
+- **Language**: Java 21
+- **Database**: PostgreSQL
+- **ORM**: Hibernate ORM with Panache
+- **Templating**: Qute
+- **QR Code**: [Quarkus QR Code Generator](https://docs.quarkiverse.io/quarkus-barcode/dev/index.html)
+- **PDF**: [Quarkus PDFBox](https://docs.quarkiverse.io/quarkus-pdfbox/dev/index.html)
+- **Security**: Quarkus Security JPA with BCrypt
+- **CI/CD**: GitHub Actions
+
+## Project Structure
+
+```
+src/
+├── main/
+│   ├── java/de/sn0rt/
+│   │   ├── AdminPage.java          # Admin panel endpoint
+│   │   ├── ShortUrl.java           # URL entity
+│   │   ├── ShortUrlRepository.java # Database repository
+│   │   ├── ShortUrlResource.java   # REST API endpoint
+│   │   ├── QRCodeService.java      # QR code generation
+│   │   ├── PdfService.java         # PDF generation
+│   │   ├── User.java               # User entity for auth
+│   │   └── Startup.java            # App initialization
+│   ├── resources/
+│   │   ├── templates/AdminPage/
+│   │   │   └── admin.html          # Synthwave UI
+│   │   ├── application.properties  # Configuration
+│   │   └── sn0rt.svg              # Logo
+│   └── docker/
+│       └── Dockerfile.jvm          # JVM Docker image
+└── test/
+    └── java/de/sn0rt/
+        ├── AdminPageTest.java      # 19 tests
+        ├── PdfServiceTest.java     # 8 tests
+        ├── ShortUrlRepositoryTest.java # 5 tests
+        └── ShortUrlResourceTest.java # 12 tests
+```
+
+## License
+
+This project uses the Quarkus framework under the Apache License 2.0.
