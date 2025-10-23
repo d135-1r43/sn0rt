@@ -166,34 +166,9 @@ curl -u admin:admin http://localhost:8080/admin/qr/{shortCode}/pdf -o qr-code.pd
 - **Security**: Quarkus Security JPA with BCrypt
 - **CI/CD**: GitHub Actions
 
-## Project Structure
+## Contributing
 
-```
-src/
-├── main/
-│   ├── java/de/sn0rt/
-│   │   ├── AdminPage.java          # Admin panel endpoint
-│   │   ├── ShortUrl.java           # URL entity
-│   │   ├── ShortUrlRepository.java # Database repository
-│   │   ├── ShortUrlResource.java   # REST API endpoint
-│   │   ├── QRCodeService.java      # QR code generation
-│   │   ├── PdfService.java         # PDF generation
-│   │   ├── User.java               # User entity for auth
-│   │   └── Startup.java            # App initialization
-│   ├── resources/
-│   │   ├── templates/AdminPage/
-│   │   │   └── admin.html          # Synthwave UI
-│   │   ├── application.properties  # Configuration
-│   │   └── sn0rt.svg              # Logo
-│   └── docker/
-│       └── Dockerfile.jvm          # JVM Docker image
-└── test/
-    └── java/de/sn0rt/
-        ├── AdminPageTest.java      # 19 tests
-        ├── PdfServiceTest.java     # 8 tests
-        ├── ShortUrlRepositoryTest.java # 5 tests
-        └── ShortUrlResourceTest.java # 12 tests
-```
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
