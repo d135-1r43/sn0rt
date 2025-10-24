@@ -10,7 +10,9 @@
       "WebFetch(domain:quarkus.io)",
       "Bash(./mvnw formatter:validate:*)",
       "Bash(timeout 120 ./mvnw formatter:validate:*)",
-      "Bash(./mvnw clean test:*)"
+      "Bash(./mvnw clean test:*)",
+      "Bash(git add:*)",
+      "Bash(git restore:*)"
     ],
     "deny": [],
     "ask": []
