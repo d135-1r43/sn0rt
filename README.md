@@ -1,57 +1,77 @@
-# sn0rt 🐷
+<div align="center">
 
-A URL shortening service built with Quarkus featuring QR code generation and a synthwave-styled admin interface.
+<img src="docs/sn0rt-logo.png" alt="sn0rt logo" width="200"/>
 
-## Features
+# sn0rt
 
-- 🔗 **URL Shortening** - Create short URLs with auto-generated or custom codes
-- 📱 **QR Code Generation** - Automatically generate QR codes for each short URL
-- 📄 **PDF Export** - Download QR codes as PDFs
-- 🔐 **Secure Admin Panel** - Basic authentication with configurable credentials
-- 🌈 **Synthwave UI** - Pig pink styled admin interface with glassmorphism effects
-- 🚀 **Built with Quarkus** - Fast, lightweight, and cloud-native
+### *The World's Best URL Snortener™* 🐷
 
-## Quick Start
+**Why have long URLs when you can have short ones?**
+We snort 'em down to size! Because nobody has time for 47-character URLs when 8 will do.
 
-### Prerequisites
+[![Built with Quarkus](https://img.shields.io/badge/Built%20with-Quarkus-4695EB?style=for-the-badge&logo=quarkus)](https://quarkus.io/)
+[![Java 21](https://img.shields.io/badge/Java-21-orange?style=for-the-badge&logo=openjdk)](https://openjdk.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-336791?style=for-the-badge&logo=postgresql)](https://www.postgresql.org/)
 
-- JDK 21
-- PostgreSQL database (or use Docker Compose)
-- Maven
+</div>
 
-### Running in Development Mode
+---
 
-Start the application with live reload:
+## ✨ Features (aka Snort Powers)
+
+| Feature | Description |
+|---------|-------------|
+| ⚡ **Snort Speed** | Faster than a pig finding truffles. URL snorting in milliseconds! |
+| 🎯 **Custom Snorts** | Name your links whatever you want. Go wild! Be creative! Snort responsibly. |
+| 📊 **Snort Analytics** | See how many times your link got snorted. Yes, we count every single snort. |
+| 📱 **QR Snorts** | Auto-magical QR codes! Point, scan, snort. It's that easy. |
+| 🔒 **Secure Snorting** | Your URLs are safe with us. We take our snorting very seriously. |
+| 🎨 **Pretty Snorts** | Because if you're gonna snort URLs, they better look fabulous doing it. |
+
+## 🚀 Quick Start (Get Snorting!)
+
+### What You'll Need
+
+- **JDK 21** - Because we're fancy like that
+- **PostgreSQL** - For storing all your glorious snorts (or use Docker Compose)
+- **Maven** - The wrapper is included, you're welcome
+
+### Fire It Up! 🔥
+
+Start the application with live reload (snort reloading?):
 
 ```bash
 ./mvnw quarkus:dev
 ```
 
-The application will be available at:
-- **Homepage**: http://localhost:8080
-- **Admin Panel**: http://localhost:8080/admin (default credentials: `admin`/`admin`)
-- **Dev UI**: http://localhost:8080/q/dev/
+**Boom!** 💥 Your snortener is now running at:
+- 🏠 **Homepage**: http://localhost:8080 - The fabulous landing page
+- 👑 **Admin Panel**: http://localhost:8080/admin - Where the magic happens (default: `admin`/`admin`)
+- 🛠️ **Dev UI**: http://localhost:8080/q/dev/ - For the curious minds
+- 📚 **API Docs**: http://localhost:8080/swagger-ui - Because documentation matters
 
-### Configuration
+### ⚙️ Configuration (Make It Yours)
 
-Configure admin credentials via environment variables:
+**Pro tip**: Don't use the default `admin`/`admin` credentials in production. That's just asking for trouble. 🙈
+
+Set your admin credentials via environment variables:
 
 ```bash
 export ADMIN_USERNAME=your-username
-export ADMIN_PASSWORD=your-password
+export ADMIN_PASSWORD=super-secret-password
 ```
 
-Or in `application.properties`:
+Or configure in `application.properties`:
 
 ```properties
 sn0rt.admin.username=your-username
-sn0rt.admin.password=your-password
+sn0rt.admin.password=super-secret-password
 sn0rt.base-url=https://your-domain.com
 ```
 
-## Docker Deployment
+## 🐳 Docker Deployment (Containerized Snorting)
 
-### Build Docker Image
+### Build Your Snort Container
 
 ```bash
 ./mvnw package
@@ -70,21 +90,23 @@ docker run -p 8080:8080 \
   sn0rt:latest
 ```
 
-### GitHub Container Registry
+### 📦 GitHub Container Registry
 
-The project includes a GitHub Actions workflow that automatically builds and pushes Docker images to GitHub Container Registry on every push to `main`:
+We've got CI/CD! Every push to `main` automatically builds and publishes a fresh Docker image:
 
 ```bash
-docker pull ghcr.io/<your-username>/sn0rt:latest
+docker pull ghcr.io/d135-1r43/sn0rt:latest
 ```
 
-## Building and Testing
+## 🔨 Building and Testing
 
-### Run Tests
+### Run Tests (Make Sure Nothing's Broken)
 
 ```bash
 ./mvnw test
 ```
+
+All tests follow the **Given-When-Then** pattern. We're civilized here. 🎩
 
 ### Build Package
 
@@ -92,60 +114,68 @@ docker pull ghcr.io/<your-username>/sn0rt:latest
 ./mvnw package
 ```
 
-### Build Uber-JAR
+### Build Uber-JAR (The Chonky Boi)
 
 ```bash
 ./mvnw package -Dquarkus.package.jar.type=uber-jar
 java -jar target/*-runner.jar
 ```
 
-## Native Executable
+## ⚡ Native Executable (For Speed Demons)
 
-Build a native executable for faster startup and lower memory footprint:
+Want blazing-fast startup and tiny memory footprint? Go native!
 
 ```bash
 ./mvnw package -Dnative
 ```
 
-Or build in a container (no GraalVM installation required):
+No GraalVM? No problem! Build in a container:
 
 ```bash
 ./mvnw package -Dnative -Dquarkus.native.container-build=true
 ```
 
-Run the native executable:
+Run your lightning-fast native snortener:
 
 ```bash
 ./target/sn0rt-1.0.0-SNAPSHOT-runner
 ```
 
-Learn more: [Quarkus Native Builds](https://quarkus.io/guides/maven-tooling)
+> **Note**: Native builds can take a while. Perfect time for a coffee break ☕
 
-## API Usage
+## 🎯 API Usage (For the Programmers)
 
 ### Create a Short URL
 
-**Via Admin Panel:**
-Navigate to http://localhost:8080/admin and use the web form.
+**Option 1: The Clicky Way** 🖱️
+Just go to http://localhost:8080/admin and use the fancy web form.
 
-**Via REST API:**
+**Option 2: The Cool Way** 😎
 
 ```bash
-# Auto-generated short code
-curl -X POST http://localhost:8080/api/shorten \
+# Let us pick a random code for you
+curl -X POST http://localhost:8080/shorten \
   -H "Content-Type: application/json" \
   -d '{"url": "https://example.com/very/long/url"}'
 
-# Custom short code
-curl -X POST http://localhost:8080/api/shorten \
+# Be fancy with a custom code
+curl -X POST http://localhost:8080/shorten \
   -H "Content-Type: application/json" \
-  -d '{"url": "https://example.com/very/long/url", "customCode": "my-link"}'
+  -d '{"url": "https://example.com/very/long/url", "customCode": "my-awesome-link"}'
 ```
 
-### Access a Short URL
+### Use Your Snorted URL
 
 ```bash
 curl -L http://localhost:8080/{shortCode}
+```
+
+It redirects! Like magic! ✨
+
+### Get Stats
+
+```bash
+curl http://localhost:8080/stats/{shortCode}
 ```
 
 ### Download QR Code PDF
@@ -154,22 +184,43 @@ curl -L http://localhost:8080/{shortCode}
 curl -u admin:admin http://localhost:8080/admin/qr/{shortCode}/pdf -o qr-code.pdf
 ```
 
-## Tech Stack
+Perfect for printing and sticking on everything! 📄
 
-- **Framework**: [Quarkus 3.28.4](https://quarkus.io/)
-- **Language**: Java 21
-- **Database**: PostgreSQL
-- **ORM**: Hibernate ORM with Panache
-- **Templating**: Qute
-- **QR Code**: [Quarkus QR Code Generator](https://docs.quarkiverse.io/quarkus-barcode/dev/index.html)
-- **PDF**: [Quarkus PDFBox](https://docs.quarkiverse.io/quarkus-pdfbox/dev/index.html)
-- **Security**: Quarkus Security JPA with BCrypt
-- **CI/CD**: GitHub Actions
+## 🛠️ Tech Stack (The Good Stuff)
 
-## Contributing
+Built with love and these awesome technologies:
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+| Technology | What It Does |
+|------------|--------------|
+| [Quarkus 3.28.4](https://quarkus.io/) | The supersonic, subatomic Java framework |
+| Java 21 | Because we like our Java fresh and modern |
+| PostgreSQL | Where all the snorts are stored |
+| Hibernate ORM Panache | Makes database stuff not painful |
+| Qute | Templating that doesn't make you cry |
+| [Quarkus QR Code](https://docs.quarkiverse.io/quarkus-barcode/dev/index.html) | For those fancy scannable squares |
+| [Quarkus PDFBox](https://docs.quarkiverse.io/quarkus-pdfbox/dev/index.html) | PDF generation without the headache |
+| Quarkus Security JPA | Keeps the bad guys out with BCrypt |
+| GitHub Actions | Automatic builds because manual is for chumps |
 
-## License
+## 🤝 Contributing
+
+Found a bug? Want to add a feature? Have a hilarious idea for the copy?
+
+**Contributions are welcome!** Please feel free to submit a Pull Request. Just remember:
+- Keep it snorty 🐷
+- Follow the Given-When-Then test pattern
+- Make it fabulous ✨
+
+## 📝 License
 
 This project uses the Quarkus framework under the Apache License 2.0.
+
+---
+
+<div align="center">
+
+**Made with 💖 and 🐷 snorts**
+
+[⭐ Star us on GitHub](https://github.com/d135-1r43/sn0rt) • [🐛 Report Bug](https://github.com/d135-1r43/sn0rt/issues) • [✨ Request Feature](https://github.com/d135-1r43/sn0rt/issues)
+
+</div>
