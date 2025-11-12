@@ -94,6 +94,39 @@ public class AdminPage
 		return Response.seeOther(URI.create("/admin?success=" + URLEncoder.encode("Short URL created: " + shortCode, StandardCharsets.UTF_8))).build();
 	}
 
+	@POST
+	@Path("/update/{shortCode}")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Transactional
+	public Response updateShortUrl(@PathParam("shortCode") String shortCode, @FormParam("url") String url)
+	{
+		if (url == null || url.isBlank())
+		{
+			return Response.seeOther(URI.create("/admin?error=" + URLEncoder.encode("URL is required", StandardCharsets.UTF_8))).build();
+		}
+
+		return repository.findByShortCode(shortCode)
+			.map(shortUrl -> {
+				shortUrl.originalUrl = url;
+				repository.persist(shortUrl);
+				return Response.seeOther(URI.create("/admin?success=" + URLEncoder.encode("Short URL updated: " + shortCode, StandardCharsets.UTF_8))).build();
+			})
+			.orElse(Response.seeOther(URI.create("/admin?error=" + URLEncoder.encode("Short URL not found", StandardCharsets.UTF_8))).build());
+	}
+
+	@POST
+	@Path("/delete/{shortCode}")
+	@Transactional
+	public Response deleteShortUrl(@PathParam("shortCode") String shortCode)
+	{
+		return repository.findByShortCode(shortCode)
+			.map(shortUrl -> {
+				repository.delete(shortUrl);
+				return Response.seeOther(URI.create("/admin?success=" + URLEncoder.encode("Short URL deleted: " + shortCode, StandardCharsets.UTF_8))).build();
+			})
+			.orElse(Response.seeOther(URI.create("/admin?error=" + URLEncoder.encode("Short URL not found", StandardCharsets.UTF_8))).build());
+	}
+
 	@GET
 	@Path("/qr/{shortCode}/pdf")
 	@Produces("application/pdf")

@@ -295,4 +295,181 @@ class ShortUrlResourceTest
 			.statusCode(303)
 			.header("Location", equalTo(testUrl));
 	}
+
+	@Test
+	void testUpdateShortUrl()
+	{
+		// given
+		String originalUrl = "https://example.com/original";
+		String updatedUrl = "https://example.com/updated";
+		String shortCode = given()
+			.contentType(ContentType.JSON)
+			.body("{\"url\":\"" + originalUrl + "\"}")
+			.when()
+			.post("/shorten")
+			.then()
+			.extract()
+			.path("shortCode");
+
+		// when & then
+		given()
+			.contentType(ContentType.JSON)
+			.body("{\"url\":\"" + updatedUrl + "\"}")
+			.when()
+			.put("/" + shortCode)
+			.then()
+			.statusCode(200)
+			.body("shortCode", equalTo(shortCode))
+			.body("originalUrl", equalTo(updatedUrl));
+	}
+
+	@Test
+	void testUpdateShortUrlNotFound()
+	{
+		// given
+		String nonExistentCode = "notfound";
+		String updatedUrl = "https://example.com/updated";
+
+		// when & then
+		given()
+			.contentType(ContentType.JSON)
+			.body("{\"url\":\"" + updatedUrl + "\"}")
+			.when()
+			.put("/" + nonExistentCode)
+			.then()
+			.statusCode(404)
+			.body("error", equalTo("Short URL not found"));
+	}
+
+	@Test
+	void testUpdateShortUrlWithBlankUrl()
+	{
+		// given
+		String originalUrl = "https://example.com/original";
+		String shortCode = given()
+			.contentType(ContentType.JSON)
+			.body("{\"url\":\"" + originalUrl + "\"}")
+			.when()
+			.post("/shorten")
+			.then()
+			.extract()
+			.path("shortCode");
+
+		// when & then
+		given()
+			.contentType(ContentType.JSON)
+			.body("{\"url\":\"   \"}")
+			.when()
+			.put("/" + shortCode)
+			.then()
+			.statusCode(400)
+			.body("error", equalTo("URL is required"));
+	}
+
+	@Test
+	void testUpdateShortUrlPreservesClickCount()
+	{
+		// given
+		String originalUrl = "https://example.com/original";
+		String updatedUrl = "https://example.com/updated";
+		String shortCode = given()
+			.contentType(ContentType.JSON)
+			.body("{\"url\":\"" + originalUrl + "\"}")
+			.when()
+			.post("/shorten")
+			.then()
+			.extract()
+			.path("shortCode");
+
+		given()
+			.redirects().follow(false)
+			.when()
+			.get("/" + shortCode)
+			.then()
+			.statusCode(303);
+
+		// when
+		given()
+			.contentType(ContentType.JSON)
+			.body("{\"url\":\"" + updatedUrl + "\"}")
+			.when()
+			.put("/" + shortCode)
+			.then()
+			.statusCode(200);
+
+		// then
+		given()
+			.when()
+			.get("/stats/" + shortCode)
+			.then()
+			.statusCode(200)
+			.body("clickCount", equalTo(1))
+			.body("originalUrl", equalTo(updatedUrl));
+	}
+
+	@Test
+	void testDeleteShortUrl()
+	{
+		// given
+		String testUrl = "https://example.com/todelete";
+		String shortCode = given()
+			.contentType(ContentType.JSON)
+			.body("{\"url\":\"" + testUrl + "\"}")
+			.when()
+			.post("/shorten")
+			.then()
+			.extract()
+			.path("shortCode");
+
+		// when & then
+		given()
+			.when()
+			.delete("/" + shortCode)
+			.then()
+			.statusCode(204);
+	}
+
+	@Test
+	void testDeleteShortUrlNotFound()
+	{
+		// given
+		String nonExistentCode = "notfound";
+
+		// when & then
+		given()
+			.when()
+			.delete("/" + nonExistentCode)
+			.then()
+			.statusCode(404)
+			.body("error", equalTo("Short URL not found"));
+	}
+
+	@Test
+	void testDeletedShortUrlCannotBeAccessed()
+	{
+		// given
+		String testUrl = "https://example.com/deleted";
+		String shortCode = given()
+			.contentType(ContentType.JSON)
+			.body("{\"url\":\"" + testUrl + "\"}")
+			.when()
+			.post("/shorten")
+			.then()
+			.extract()
+			.path("shortCode");
+
+		// when
+		given()
+			.when()
+			.delete("/" + shortCode)
+			.then()
+			.statusCode(204);
+
+		// then
+		given()
+			.when()
+			.get("/" + shortCode)
+			.then()
+			.statusCode(404);
+	}
 }

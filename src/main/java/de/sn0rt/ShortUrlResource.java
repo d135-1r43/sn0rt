@@ -70,6 +70,44 @@ public class ShortUrlResource
 				.build());
 	}
 
+	@PUT
+	@Path("/{shortCode}")
+	@Transactional
+	public Response updateShortUrl(@PathParam("shortCode") String shortCode, UpdateRequest request)
+	{
+		if (request.url == null || request.url.isBlank())
+		{
+			return Response.status(Response.Status.BAD_REQUEST)
+				.entity(new ErrorResponse("URL is required"))
+				.build();
+		}
+
+		return repository.findByShortCode(shortCode)
+			.map(shortUrl -> {
+				shortUrl.originalUrl = request.url;
+				repository.persist(shortUrl);
+				return Response.ok(new ShortenResponse(shortUrl.shortCode, shortUrl.originalUrl)).build();
+			})
+			.orElse(Response.status(Response.Status.NOT_FOUND)
+				.entity(new ErrorResponse("Short URL not found"))
+				.build());
+	}
+
+	@DELETE
+	@Path("/{shortCode}")
+	@Transactional
+	public Response deleteShortUrl(@PathParam("shortCode") String shortCode)
+	{
+		return repository.findByShortCode(shortCode)
+			.map(shortUrl -> {
+				repository.delete(shortUrl);
+				return Response.noContent().build();
+			})
+			.orElse(Response.status(Response.Status.NOT_FOUND)
+				.entity(new ErrorResponse("Short URL not found"))
+				.build());
+	}
+
 	private String generateShortCode()
 	{
 		return UUID.randomUUID().toString().substring(0, 8);
@@ -79,6 +117,11 @@ public class ShortUrlResource
 	{
 		public String url;
 		public String customCode;
+	}
+
+	public static class UpdateRequest
+	{
+		public String url;
 	}
 
 	public static class ShortenResponse

@@ -337,7 +337,65 @@
             box-shadow: 0 0 20px rgba(255, 127, 183, 0.6);
             transform: translateY(-1px);
         }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff1493 0%, #dc143c 100%);
+            border-color: #ff1493;
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #dc143c 0%, #ff1493 100%);
+            box-shadow: 0 0 20px rgba(220, 20, 60, 0.6);
+        }
+
+        .url-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid rgba(255, 127, 183, 0.3);
+        }
+
+        .edit-form {
+            display: none;
+            margin-top: 15px;
+            padding: 20px;
+            background: rgba(26, 5, 32, 0.8);
+            border-radius: 10px;
+            border: 2px solid #ff7fb7;
+        }
+
+        .edit-form.active {
+            display: block;
+        }
+
+        .edit-form input {
+            margin-bottom: 15px;
+        }
+
+        .edit-form-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-cancel {
+            background: rgba(255, 127, 183, 0.2);
+            color: #ff7fb7;
+            border-color: #ff7fb7;
+        }
+
+        .btn-cancel:hover {
+            background: rgba(255, 127, 183, 0.3);
+            border-color: #ff1493;
+            color: #ff1493;
+        }
     </style>
+    <script>
+        function toggleEdit(shortCode) {
+            const editForm = document.getElementById('edit-form-' + shortCode);
+            editForm.classList.toggle('active');
+        }
+    </script>
 </head>
 <body>
     <div class="container">
@@ -416,6 +474,22 @@
                         <div class="qr-code-actions">
                             <a href="/admin/qr/{item.url.shortCode}/pdf" class="btn-small" download>Download PDF</a>
                         </div>
+                    </div>
+                    <div class="url-actions">
+                        <button type="button" class="btn-small" onclick="toggleEdit('{item.url.shortCode}')">Edit URL</button>
+                        <form method="POST" action="/admin/delete/{item.url.shortCode}" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this short URL?')">
+                            <button type="submit" class="btn-small btn-danger">Delete</button>
+                        </form>
+                    </div>
+                    <div id="edit-form-{item.url.shortCode}" class="edit-form">
+                        <form method="POST" action="/admin/update/{item.url.shortCode}">
+                            <label for="edit-url-{item.url.shortCode}">Update URL</label>
+                            <input type="url" id="edit-url-{item.url.shortCode}" name="url" value="{item.url.originalUrl}" required>
+                            <div class="edit-form-buttons">
+                                <button type="submit" class="btn-small">Save Changes</button>
+                                <button type="button" class="btn-small btn-cancel" onclick="toggleEdit('{item.url.shortCode}')">Cancel</button>
+                            </div>
+                        </form>
                     </div>
                 </li>
                 {/for}
