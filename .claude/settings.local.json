@@ -14,7 +14,8 @@
       "Bash(git add:*)",
       "Bash(git restore:*)",
       "Bash(cat:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(./mvnw test:*)"
     ],
     "deny": [],
     "ask": []
