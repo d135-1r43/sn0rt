@@ -16,7 +16,18 @@
       "Bash(cat:*)",
       "Bash(git commit:*)",
       "Bash(./mvnw test:*)",
-      "Bash(gh run list:*)"
+      "Bash(gh run list:*)",
+      "Bash(git push:*)",
+      "Bash(gh pr list:*)",
+      "Bash(gh run view:*)",
+      "Bash(git tag:*)",
+      "Bash(gh release create:*)",
+      "Bash(docker manifest inspect:*)",
+      "Bash(git fetch:*)",
+      "Bash(gh pr edit:*)",
+      "Bash(gh pr merge:*)",
+      "Bash(gh pr close:*)",
+      "Bash(git pull:*)"
     ],
     "deny": [],
     "ask": []
