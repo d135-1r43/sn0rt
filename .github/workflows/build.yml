@@ -43,4 +43,4 @@ jobs:
         context: .
         push: true
         file: src/main/docker/Dockerfile.jvm
-        tags: ghcr.io/${{ github.repository_owner }}/sn0rt:latest
+        tags: ghcr.io/${{ github.repository_owner }}/sn0rt:snapshot
