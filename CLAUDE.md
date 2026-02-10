@@ -130,13 +130,23 @@ class ExampleTest {
 
 ## Commit Message Convention
 
-Use official GitMoji commit message convention, e.g.
-- 📝 `(docs):` - Documentation changes
-- 🎨 `(design):` - UI/UX changes
-- 👷 `(ci):` - CI/CD changes
-- ✨ `(feat):` - New features
-- 🐛 `(fix):` - Bug fixes
-- ♻️ `(refactor):` - Code refactoring
+Use conventional commits with GitMoji for semantic versioning compatibility:
+
+**Format:** `type(scope): emoji description`
+
+Examples:
+- `docs: 📝 Update API documentation` - Documentation changes
+- `design: 🎨 Improve button styling` - UI/UX changes
+- `ci: 👷 Add release workflow` - CI/CD changes
+- `feat: ✨ Add QR code generation` - New features (minor version bump)
+- `fix: 🐛 Correct URL validation` - Bug fixes (patch version bump)
+- `refactor: ♻️ Simplify database queries` - Code refactoring
+
+**Breaking changes:** Add `!` after type or `BREAKING CHANGE:` in footer for major version bumps
+- `feat!: ✨ Change API response format`
+- Or in commit body: `BREAKING CHANGE: API now returns different format`
+
+This format ensures compatibility with automated semantic versioning via release-please
 
 ## Best Practices
 
