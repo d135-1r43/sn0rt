@@ -27,7 +27,8 @@
       "Bash(gh pr edit:*)",
       "Bash(gh pr merge:*)",
       "Bash(gh pr close:*)",
-      "Bash(git pull:*)"
+      "Bash(git pull:*)",
+      "Skill(commit-commands:commit)"
     ],
     "deny": [],
     "ask": []
