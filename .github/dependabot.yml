@@ -4,8 +4,72 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "chore: ⬆️"
+    groups:
+      quarkus:
+        patterns:
+          - "io.quarkus:*"
+          - "io.quarkus.platform:*"
+      quarkiverse:
+        patterns:
+          - "io.quarkiverse.*:*"
+      test-dependencies:
+        patterns:
+          - "io.rest-assured:*"
+          - "org.junit*:*"
+          - "org.assertj:*"
+          - "org.mockito:*"
+          - "org.testcontainers:*"
+      maven-plugins:
+        patterns:
+          - "org.apache.maven.plugins:*"
+          - "net.revelc.code.formatter:*"
+          - "org.codehaus.mojo:*"
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "ci: ⬆️"
+    groups:
+      github-actions:
+        patterns:
+          - "actions/*"
+      docker-actions:
+        patterns:
+          - "docker/*"
+      claude-actions:
+        patterns:
+          - "anthropics/*"
+      other-actions:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "actions/*"
+          - "docker/*"
+          - "anthropics/*"
+
+  - package-ecosystem: "docker"
+    directories:
+      - "/"
+      - "/src/main/docker"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "chore: ⬆️"
+    groups:
+      quarkus-base-images:
+        patterns:
+          - "quay.io/quarkus/*"
+      redhat-base-images:
+        patterns:
+          - "registry.access.redhat.com/*"
+      infrastructure-images:
+        patterns:
+          - "postgres"
+          - "ghcr.io/d135-1r43/*"
